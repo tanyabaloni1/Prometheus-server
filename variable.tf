@@ -16,11 +16,13 @@ variable "common_tags" {
 variable "vpc_id" {
   type        = string
   description = "A string value for VPC ID"
+  default = "vpc-06b81581f436fc50d"
 }
 
 variable "subnet_ids" {
   type        = list(string)
   description = "Subnet Ids where server will be launched"
+  default = ["subnet-0439466f054b180df","subnet-00fb82858212f688a"]
 }
 
 variable "security_group_ids" {
@@ -31,13 +33,13 @@ variable "security_group_ids" {
 
 variable "kms_key_id" {
   type        = string
-  description = "KMS key ID for creating AWS resources default alias for EC2 is aws/ebs and for AWS Elasticsearch aws/es"
+  description = "KMS key ID for creating AWS resources default alias for EC2 is aws/ebs and for AWS prometheus aws/es"
   default     = "alias/aws/ebs"
 }
 
 variable "cloudwatch_logs_retention" {
   type        = number
-  description = "Cloudwatch logs of the AWS Elasticsearch retention period"
+  description = "Cloudwatch logs of the AWS prometheus retention period"
   default     = 7
 }
 
@@ -65,12 +67,6 @@ variable "delete_on_termination" {
   default     = true
 }
 
-variable "elasticsearch_version" {
-  type        = string
-  description = "AWS Elasticsearch version default is 7.10 which is latest"
-  default     = "7.10"
-}
-
 variable "instance_type" {
   type        = string
   description = "Instance type of the Server"
@@ -79,7 +75,7 @@ variable "instance_type" {
 
 variable "instance_count" {
   type        = number
-  description = "Number of node of AWS elasticsearch you want to launch"
+  description = "Number of node of AWS prometheus you want to launch"
   default     = 1
 }
 
@@ -97,7 +93,7 @@ variable "zone_awareness_enabled" {
 
 variable "automated_snapshot_start_hour" {
   type        = number
-  description = "AWS elasticsearch snapshot start hour time"
+  description = "AWS prometheus snapshot start hour time"
   default     = 22
 }
 
@@ -106,16 +102,6 @@ variable "advanced_security_options_enabled" {
   description = "Advance Security Option to Enable for Authentication"
   default     = false
 }
-variable "master_user_name" {
-  type        = string
-  description = "Username of the security option enabled"
-  default     = ""
-}
-variable "master_user_password" {
-  type        = string
-  description = "Password of the security option enabled"
-  default     = ""
-}
 
 variable "create_iam_service_linked_role" {
   type        = bool
@@ -123,15 +109,15 @@ variable "create_iam_service_linked_role" {
   description = "Whether to create `AWSServiceRoleForAmazonElasticsearchService` service-linked role. Set it to `false` if you already have an ElasticSearch cluster created in the AWS account and AWSServiceRoleForAmazonElasticsearchService already exists."
 }
 
-variable "create_aws_elasticsearch" {
+variable "create_aws_prometheus" {
   type        = bool
-  description = "If you want to create the AWS elasticsearch enable this check"
+  description = "If you want to create the AWS prometheus enable this check"
   default     = false
 }
 
-variable "create_aws_ec2_elasticsearch" {
+variable "create_aws_ec2_prometheus" {
   type        = bool
-  description = "If you want to create the AWS EC2 instance elasticsearch enable this check"
+  description = "If you want to create the AWS EC2 instance prometheus enable this check"
   default     = true
 }
 

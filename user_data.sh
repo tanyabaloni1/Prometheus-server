@@ -1,20 +1,68 @@
 #!/bin/bash
+# Install Prometheus 
+cd /tmp
+curl -LO https://github.com/prometheus/prometheus/releases/download/v2.44.0-rc.0/prometheus-2.44.0-rc.0.linux-amd64.tar.gz
+tar -xvf prometheus-2.44.0-rc.0.linux-amd64.tar.gz
+mkdir prometheus-files
+cp -r prometheus-2.44.0-rc.0.linux-amd64/. prometheus-files
+useradd --no-create-home --shell /bin/false prometheus
+mkdir /etc/prometheus
+mkdir /var/lib/prometheus
+chown prometheus:prometheus /etc/prometheus
+chown prometheus:prometheus /var/lib/prometheus
+cp prometheus-files/prometheus /usr/local/bin/
+cp prometheus-files/promtool /usr/local/bin/
+chown prometheus:prometheus /usr/local/bin/prometheus
+chown prometheus:prometheus /usr/local/bin/promtool
+cp -r prometheus-files/consoles /etc/prometheus
+cp -r prometheus-files/console_libraries /etc/prometheus
+chown -R prometheus:prometheus /etc/prometheus/consoles
+chown -R prometheus:prometheus /etc/prometheus/console_libraries
+cat << EOF | sudo tee /etc/prometheus/prometheus.yml
 
-version=7.17.8
-wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-"$version"-x86_64.rpm
-wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-"$version"-x86_64.rpm.sha512
-shasum -a 512 -c elasticsearch-"$version"-x86_64.rpm.sha512
-sudo rpm --install elasticsearch-"$version"-x86_64.rpm
+global:
+  scrape_interval: 60s # How frequently to scrape targets by default.
+  scrape_timeout: 10s # How long until a scrape request times out.
+  evaluation_interval: 60s # How frequently to evaluate rules.
 
+# A scrape configuration
+scrape_configs:
+  - job_name: prometheus
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['localhost:9090']
+  - job_name: elasticsearch_exporter
+    static_configs:
+      - targets: ['${pip}:9114'] 
+  - job_name: mongodb_exporter
+    static_configs:
+      - targets: ['${mpip1}:9001'] 
+   - job_name: mongodb_exporter
+    static_configs:
+      - targets: ['${mpip2}:9001'] 
+EOF
+
+cat << EOF | sudo tee /etc/systemd/system/prometheus.service
+[Unit]
+Description=Prometheus
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/usr/local/bin/prometheus \
+    --config.file /etc/prometheus/prometheus.yml \
+    --storage.tsdb.path /var/lib/prometheus/ \
+    --web.console.templates=/etc/prometheus/consoles \
+    --web.console.libraries=/etc/prometheus/console_libraries
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
 sudo systemctl daemon-reload
-sudo systemctl enable elasticsearch.service
-sudo systemctl start elasticsearch.service
-
-echo "transport.host: localhost" >> /etc/elasticsearch/elasticsearch.yml
-echo "transport.tcp.port: 9300" >> /etc/elasticsearch/elasticsearch.yml
-echo "http.port: 9200"  >> /etc/elasticsearch/elasticsearch.yml
-echo "network.host: 0.0.0.0"  >> /etc/elasticsearch/elasticsearch.yml
-echo "xpack.security.enabled: false"  >> /etc/elasticsearch/elasticsearch.yml
-echo "xpack.security.transport.ssl.enabled: false"  >> /etc/elasticsearch/elasticsearch.yml
-
-sudo systemctl restart elasticsearch.service
+sudo systemctl enable prometheus
+sudo systemctl start prometheus
+  

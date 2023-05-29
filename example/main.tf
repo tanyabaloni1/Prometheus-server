@@ -8,3 +8,9 @@ module "elasticsearch" {
   subnet_ids = ["subnet-999999999999"]
   key_name   = "tothenew"
 }
+
+
+
+
+
+
