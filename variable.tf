@@ -163,6 +163,12 @@ variable "ami_id" {
   default     = ""
 }
 
-variable "elasticsearch_ip_addr"{}
-variable "mongodb_id_addr1"{}
-variable "mongodb_id_addr2"{}
+variable "elasticsearch_ip_addr"{
+type        = string
+}
+variable "mongodb_id_addr1"{
+type        = string
+}
+variable "mongodb_id_addr2"{
+type        = string
+}
