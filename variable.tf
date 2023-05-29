@@ -166,9 +166,9 @@ variable "ami_id" {
 variable "elasticsearch_ip_addr"{
 type        = string
 }
-variable "mongodb_id_addr1"{
+variable "mongodb_ip_addr1"{
 type        = string
 }
-variable "mongodb_id_addr2"{
+variable "mongodb_ip_addr2"{
 type        = string
 }
