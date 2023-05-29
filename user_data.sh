@@ -40,9 +40,6 @@ scrape_configs:
   - job_name: mongodb_exporter_2
     static_configs:
       - targets: ['${mpip2}:9001'] 
-  - job_name: mongodb_exporter_3
-    static_configs:
-      - targets: ['${mpip3}:9001'] 
 EOF
 
 cat << EOF | sudo tee /etc/systemd/system/prometheus.service
