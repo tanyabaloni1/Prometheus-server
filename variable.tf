@@ -162,3 +162,7 @@ variable "ami_id" {
   description = "AMI id of the Amazon Linux 2"
   default     = ""
 }
+
+variable "elasticsearch_ip_addr"{}
+variable "mongodb_id_addr1"{}
+variable "mongodb_id_addr2"{}
