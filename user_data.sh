@@ -18,6 +18,7 @@ cp -r prometheus-files/consoles /etc/prometheus
 cp -r prometheus-files/console_libraries /etc/prometheus
 chown -R prometheus:prometheus /etc/prometheus/consoles
 chown -R prometheus:prometheus /etc/prometheus/console_libraries
+echo $pip
 cat << EOF | sudo tee /etc/prometheus/prometheus.yml
 
 global:
@@ -34,12 +35,12 @@ scrape_configs:
   - job_name: elasticsearch_exporter
     static_configs:
       - targets: ['${pip}:9114'] 
-  - job_name: mongodb_exporter_1
-    static_configs:
-      - targets: ['${mpip1}:9001'] 
-  - job_name: mongodb_exporter_2
-    static_configs:
-      - targets: ['${mpip2}:9001'] 
+ # - job_name: mongodb_exporter_1
+    #static_configs:
+      #- targets: ['${mpip1}:9001'] 
+  #- job_name: mongodb_exporter_2
+    #static_configs:
+      #- targets: ['${mpip2}:9001'] 
 EOF
 
 cat << EOF | sudo tee /etc/systemd/system/prometheus.service
