@@ -34,7 +34,7 @@ scrape_configs:
       - targets: ['localhost:9090']
   - job_name: elasticsearch_exporter
     static_configs:
-      - targets: ['${pip}:9114'] 
+      - targets: ['${elasticsearch_private_ip}:9114'] 
  # - job_name: mongodb_exporter_1
     #static_configs:
       #- targets: ['${mpip1}:9001'] 
