@@ -35,12 +35,6 @@ scrape_configs:
   - job_name: elasticsearch_exporter
     static_configs:
       - targets: ['${elasticsearch_private_ip}:9114'] 
- # - job_name: mongodb_exporter_1
-    #static_configs:
-      #- targets: ['${mpip1}:9001'] 
-  #- job_name: mongodb_exporter_2
-    #static_configs:
-      #- targets: ['${mpip2}:9001'] 
 EOF
 
 cat << EOF | sudo tee /etc/systemd/system/prometheus.service
