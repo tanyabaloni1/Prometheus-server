@@ -120,8 +120,20 @@ data "aws_ami" "amazon_linux_2" {
 #   }
 # }
 
+data "aws_ssm_parameter" "mongodb_endpoint" {
+  depends_on = [
+    module.mongodb
+  ]
+  name = "/${local.workspace.rds.environment}/MongoDB/MONGODB_HOST"
+}
+
 data "template_file" "user_data" {
   template = file("${path.module}/user_data.sh")
+  vars = {
+ elasticsearch_private_ip= var.elasticsearch_private_ip
+ mongodb_private_ip=data.aws_ssm_parameter.mongodb_endpoint.value
+}
+  
 }
 
 resource "aws_instance" "ec2_prometheus" {
