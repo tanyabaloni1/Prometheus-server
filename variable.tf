@@ -163,7 +163,7 @@ variable "ami_id" {
   default     = ""
 }
 
-variable "ec2_elasticsearch_private_ip"{
+variable "elasticsearch_private_ip"{
 type        = string
 }
 
