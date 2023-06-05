@@ -131,8 +131,10 @@ data "template_file" "user_data" {
   template = file("${path.module}/user_data.sh")
   vars = {
  elasticsearch_private_ip= var.elasticsearch_private_ip
- mongodb_private_ip=data.aws_ssm_parameter.mongodb_endpoint.value
-}
+ #mongodb_private_ip=data.aws_ssm_parameter.mongodb_endpoint.value
+ mongodb_private_ip= var.mongodb_private_ip
+  }
+  
   
 }
 
