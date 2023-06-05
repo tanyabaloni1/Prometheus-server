@@ -167,3 +167,6 @@ variable "elasticsearch_private_ip"{
 type        = string
 }
 
+variable "mongodb_private_ip" {
+  type = string
+}
