@@ -18,7 +18,13 @@ cp -r prometheus-files/consoles /etc/prometheus
 cp -r prometheus-files/console_libraries /etc/prometheus
 chown -R prometheus:prometheus /etc/prometheus/consoles
 chown -R prometheus:prometheus /etc/prometheus/console_libraries
-echo $pip
+
+ip_list=${mongodb_private_ip}
+IFS=',' read -ra ips <<< "$ip_list"
+
+ip1="${ips[0]}"
+ip2="${ips[1]}"
+ip3="${ips[2]}"
 cat << EOF | sudo tee /etc/prometheus/prometheus.yml
 
 global:
@@ -35,6 +41,9 @@ scrape_configs:
   - job_name: elasticsearch_exporter
     static_configs:
       - targets: ['${elasticsearch_private_ip}:9114'] 
+  - job_name: mongodb_exporter
+    static_configs:
+      - targets: ['${ip1}:9001','${ip2}:9001','${ip3}:9001']
 EOF
 
 cat << EOF | sudo tee /etc/systemd/system/prometheus.service
