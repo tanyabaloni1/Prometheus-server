@@ -129,13 +129,12 @@ data "aws_ssm_parameter" "mongodb_endpoint" {
 
 data "template_file" "user_data" {
   template = file("${path.module}/user_data.sh")
-  vars = {
+vars = {
  elasticsearch_private_ip= var.elasticsearch_private_ip
- #mongodb_private_ip=data.aws_ssm_parameter.mongodb_endpoint.value
- mongodb_private_ip= var.mongodb_private_ip
-  }
-  
-  
+ mongodb_private_ip1 = var.mongodb_private_ip[0]
+ mongodb_private_ip2 = var.mongodb_private_ip[1]
+ mongodb_private_ip3 = var.mongodb_private_ip[2]
+}
 }
 
 resource "aws_instance" "ec2_prometheus" {
