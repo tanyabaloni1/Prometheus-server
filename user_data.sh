@@ -18,21 +18,22 @@ cp -r prometheus-files/consoles /etc/prometheus
 cp -r prometheus-files/console_libraries /etc/prometheus
 chown -R prometheus:prometheus /etc/prometheus/consoles
 chown -R prometheus:prometheus /etc/prometheus/console_libraries
+#echo $pip
 
-ip_list=${mongodb_private_ip}
-IFS=',' read -ra ips <<< "$ip_list"
+#ip_list=$mongodb_private_ip
+#IFS=',' read -ra ips <<< "$ip_list"
 
-ip1="${ips[0]}"
-ip2="${ips[1]}"
-ip3="${ips[2]}"
+#ip1="${ips[0]}"
+#ip2="${ips[1]}"
+#ip3="${ips[2]}"
+
 cat << EOF | sudo tee /etc/prometheus/prometheus.yml
 
 global:
   scrape_interval: 60s # How frequently to scrape targets by default.
   scrape_timeout: 10s # How long until a scrape request times out.
   evaluation_interval: 60s # How frequently to evaluate rules.
-
-# A scrape configuration
+  # A scrape configuration
 scrape_configs:
   - job_name: prometheus
     metrics_path: /metrics
@@ -40,12 +41,11 @@ scrape_configs:
       - targets: ['localhost:9090']
   - job_name: elasticsearch_exporter
     static_configs:
-      - targets: ['${elasticsearch_private_ip}:9114'] 
+      - targets: ['${elasticsearch_private_ip}:9114']
   - job_name: mongodb_exporter
     static_configs:
-      - targets: ['${ip1}:9001','${ip2}:9001','${ip3}:9001']
+      - targets: ['${mongodb_private_ip1}:9001','${mongodb_private_ip2}:9001','${mongodb_private_ip3}:9001']
 EOF
-
 cat << EOF | sudo tee /etc/systemd/system/prometheus.service
 [Unit]
 Description=Prometheus
@@ -69,4 +69,3 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable prometheus
 sudo systemctl start prometheus
-  
